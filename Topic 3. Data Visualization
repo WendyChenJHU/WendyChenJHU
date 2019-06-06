@@ -1,0 +1,9 @@
+# 3. Data Visualization ===========================
+ggplot(datasource) + 
+  geom_point(mapping = aes(x = x, y = y)) # ggplot is created by the build-up of codes
+ggplot(datasource) + 
+  geom_point(mapping = aes(x = x, y = y, alpha = class)) # alpha aesthetic
+ggplot(datasource) + 
+  geom_point(mapping = aes(x = x, y = y, shape = class)) # alpha aesthetic
+ggplot(datasource) + 
+  geom_point(mapping = aes(x = x, y = y, shape = blue)) # plot in dif color 
