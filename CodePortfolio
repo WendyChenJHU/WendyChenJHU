@@ -1,1 +1,91 @@
-Code Portfolio
+# Exploratory Data Analysis #
+# R Script Cheatsheet (Code Portfolio) ===============
+# 1. Data Import ===================
+# Read data =================
+
+library(readr)
+ozone <- read_csv()
+
+# Check the packaging ================
+
+nrow(dataset) # number of rows
+ncol(dataset) # number of columns
+str(dataset) 
+head(dataset)
+tail(dataset)
+unique(dataset$column_name)
+summary(dataset$column_name)
+quantile(dataset$column_name, seq(0,1,0.1))
+
+# Value types =======================
+class(x)         # print the class name of x (numberic, integer, etc)
+is.integer(k)    # is k an integer? true or false
+y = as.integer(3) #coerce a numeric value into an integer
+as.integer("5.27") #coerce a decimal string. output: "5"
+
+# Integer ===========================
+# Concatenate 
+fname = "Joe"; lname = "Smith"
+paste(fname, lname)
+
+# Create a readable string
+sprintf("%s has %d dollars", "Sam",100) #"Sam has 100 dollars"
+
+# Extract a substring
+substr("Mary has a little lamb.", start= 3, stop= 12) #"ry has a l"
+
+# Replace a string
+sub ("little", "big", "Mary has a little lamb.")
+
+# Work Directory ==============
+
+# Print my current working directory
+getwd()
+
+# Change my working directory to the following path
+setwd(dir = "/Users/nphillips/Dropbox/yarrr")
+
+# Print all the objects in my workspace
+ls()
+
+# Save two objects as a new .RData file
+#   in the data folder of my current working directory
+save(study1.df, score.by.sex, study1.htest,
+     file = "data/study1.RData")
+
+# Save my workspace to complete_image.RData in th,e
+#  data folder of my working directory
+save.image(file = "data/projectimage.RData")
+
+# Load objects in study1.RData into my workspace
+load(file = "data/study1.RData")
+
+# Read non-text files
+install.packages("foreign")
+
+# Read Excel files
+install.packages("xlsx")
+
+# Data Import =============
+library(tidyverse)
+# Read CSV file
+read_csv()
+read_csv("data/heights.csv")
+read_csv("a,b,c
+         1,2,3
+         4,5,6")
+read_csv("The first line of metadata
+         The second line of metadata
+         x,y,z
+         1,2,3", skip = 2)
+read_csv("#A comment I want to skip
+         x,y,z
+         1,2,3", comment= "#")
+read_csv("1,2,3\n4,5,6", col_names = FALSE) # first row not a column
+read_csv("1,2,3\,4,5,6", col_names = c("x","y","z"))
+read_csv("a,b,c\n1,2,.", na = ".") # specify na's value
+
+# REad Fixed Width Files
+read_fwf()
+#Read Apache Style log files
+read_log()
