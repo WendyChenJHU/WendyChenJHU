@@ -1,0 +1,10 @@
+# 2. Data Transformation ==========================
+library(tidyverse)
+tibble()
+mutate()
+gather() #transpose 
+spread()
+separate(datasource, info = c("column1","column2")) #separate into two columns column
+separate(datasource, info = c("column1","column2"), sep = "/") #separate into two columns
+separate(datasource, info = c("column1","column2"), convert = TRUE) #separate into two columns
+unite() # combines multiple columns into one column
