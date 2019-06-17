@@ -1,0 +1,189 @@
+### Final Project- gapminder 
+
+---
+title: "Final Project"
+author: "Wen-Chiao (Wendy) Chen"
+date: "6/16/2019"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+library(readr)
+
+gapminder <- read_csv("gapminder.csv", col_types = cols(Year = col_integer(), 
+    income = col_number(), life = col_number(), 
+    population = col_number()), na = "null")
+
+str (gapminder)
+length(unique (gapminder$Country)) #197 countries
+unique (gapminder$region)
+
+```
+
+```{r, echo=FALSE}
+no.country= length(unique(gapminder$Country))
+```
+
+## Final Project -- EDA Analysis on gapminder.csv
+
+For the final project of course ANLY 506-51- B-2019/Late Spring - Exploratory Data Analytics, I conducted an Exploratory Data Analysis on the dataset called 'gapminder.csv'.
+
+### Data Introduction
+
+The dataset 'gapminder.csv' provides insights of Income, Population, and Life Expectancy to `r no.country` countries worldwide, from year 1800 to 2015. There are total 41,284 observations and 6 variables in the dataset.  
+
+A list of variables and their correspondant data types are described as below.  
+
+1. Country: Character  
+2. Year: Integer  
+3. Life (Life Expectancy): Number  
+4. Population: Number  
+5. Income (GDP Per Capita): Number  
+6. Region: Character  
+
+### Understand the Data
+To understand the distribution and how disperse is the dataset, I use the Summary Function.  
+
+```{r}
+summary (gapminder)
+```
+
+For Variable 'Country', there are total 197 unique countries.  
+
+For Variable 'Year', it starts from year 1800 to year 2015.  
+
+For Variable 'Life' (Life Expectancy), it ranges from 1 to 84 years old.   
+
+For Variable 'Population', it ranges from 1,548 people to 1.376 million people. Since the population variable is captured every 10 years, there are null values in the years that do not have population value. In total, there are 25,817 NA values.  
+
+For Variable 'Income', it refers to the GPD per capital. The minimum is 142 dollars. The maximum is 182,668 dollars. There are 2,341 NA Income values.  
+
+For Variable 'Region', there are 6 regions (South Asia, Europe & Central Asia, Middle East & North Africa, Sub-Saharan Africa, America, and East Asia & Pacific) that categorize the location of countries.  
+
+### Data Processing
+
+In the dataset, the variable Population is calculated every ten years. For the years that have null values, I set the datapoints as NA. This way, the datapoints are not treated as zeros. This is done when importing the data, see below.  
+
+```{r eval=FALSE}
+gapminder <- read_csv("gapminder.csv", col_types = cols(Year = col_integer(), 
+    income = col_number(), life = col_number(), 
+    population = col_number()), na = "null")
+```
+
+Note: For data wrangling, it is done separately below when doing data visualizations.  
+
+### Focused Data Exploration Question  
+
+In this EDA analysis, my goal is to explore the following topics, which is summarized as below. As the core concept of EDA is process-oriented and not conclusion-oriented, this paper shows the flow of the data exploration in this dataset.  
+
+Focused Question:  
+**How does human's Life Expectancy change over time? How is the Lift Expectacy distributed differently between different regions?**  
+
+### Data Exploration
+
+Now, I am going to use some plotting techniques to visualize the data and further explore how the dataset looks like.  
+
+In the first histogram for Life Expectancy, all of the people from 1800 to 2015 are caputured in this graph. There is a spike in the histogram, pointing out the age span from 24 to 26 years old has the highest amount of population.  
+
+``` {r echo=FALSE}
+hist(gapminder$life, main = "Life Expectancy 1800 - 2015", xlab = "Life Expectancy", ylab = "No. of People", xlim=c(0,100), ylim=c(0,14000))
+```
+
+However, the lift expectancy in different eras should be different. Therefore, I create the following histograms for different centuries.  
+
+``` {r echo=FALSE}
+gapminder19th = gapminder [which (gapminder$Year<=1899), ]
+hist(gapminder19th$life, main = "Life Expectancy-  19th Century", xlab = "Life Expectancy", ylab = "No. of People", xlim=c(0,100))
+```
+From the histogram, the maximum life expetancy is in their 50s. Most people (more than 50% of the population) die in their 20s or 30s. 
+
+
+``` {r echo=FALSE}
+gapminder20th = gapminder [which (gapminder$Year<=1999), ]
+hist(gapminder20th$life, main = "Life Expectancy-  20th Century", xlab = "Life Expectancy", ylab = "No. of People", xlim=c(0,100))
+```
+In the 20th Century, human's life expetancy increases. Although the age group that highiest amount of people die in is 30-35 years old, people can live through 60s and 70s, even through 80s.
+
+
+``` {r echo=FALSE}
+gapminder21st = gapminder [which (gapminder$Year>=2000), ]
+hist(gapminder21st$life, main = "Life Expectancy-  21st Century", xlab = "Life Expectancy", ylab = "No. of People", xlim=c(0,100))
+```
+In the 21st Century, the phenomenon of again population is self-explainatory. The amount of people who live through 60s and 70s increases by great deal. People not only can live beyond 60s. The age group that has the most amount of popluation is in the 70s age group. 
+
+Next, let's see how long do people in different regions live? In the below boxplot, the boxplot for all six regions are put together in one graph. Taking a look at the average life expectancy across different regions, people in Europ and Central Asia have the longest life span averagely. 
+
+``` {r echo=FALSE}
+boxplot (life ~ region, data = gapminder, main = "Life Expectancy in Different Regions, 1800-2015", xlab = "Region", ylab = "Life Expectancy")
+```
+
+Considering the life expectancy varies hugely in different centuries, let's tak a look of the same chart in 21st century. 
+``` {r echo=FALSE}
+boxplot (life ~ region, data = gapminder21st, main = "Life Expectancy in Different Regions, 2000-2015", xlab = "Region", ylab = "Life Expectancy")
+```
+
+Comparing the above two boxplots (data comparison between all time and the time span of 2000-2015), the first quartile, average value, the third quartile, and maximum value all increased in 21st Century. People in Europe and Central Asia continue to have the longest average life span.  
+
+Next, let's take a look of the distribution of life and income in scatterplots. In the below scatterplot, each graph shows data in different regions. Generally, people with higher income live longer life. Let's take a closer look of the same graph for 21st humans. 
+
+``` {r echo= FALSE}
+library (ggplot2)
+ggplot(gapminder, aes(x = life, y = income)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_y_log10() +
+  facet_wrap(~ region) +
+  labs (x= "Life Expectancy", y = "Income", title = "Income Distribution across Different Age Group, 1800-2015")
+```
+
+``` {r echo= FALSE}
+library (ggplot2)
+ggplot(gapminder21st, aes(x = life, y = income)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_y_log10() +
+  facet_wrap(~ region) +
+  labs (x= "Life Expectancy", y = "Income",title = "Income Distribution across Different Age Group, 2000-2015")
+```
+
+### Cluster Analysis
+
+```{r}
+#gapminderTaiwan.df= data.frame(gapminder [gapminder$Country == "Taiwan",])
+#kmeans = kmeans(gapminderTaiwan.df, centers = 3)
+
+#clusters= hclust (dist(gapminderTaiwan.df[,3:4]))
+#plot(clusters, cex= 0.65)
+
+
+
+#library(ggplot2)
+#ggplot(gapminderTaiwan.df, aes(x= income, y= population, color = clusters)) +
+  geom_point()
+  
+```
+
+
+## Summary  
+
+In response to the focused research question "How does human's Life Expectancy change over time? How is the Life Expectacy distributed differently between different regions?", the paper utilized different visualization techniques such as histograms, scatterplots, and boxplots to explore the relationship between Life Expectancy, Income, and Region. Through process-focused Exploratory Data Analysis, it has shown that human's life expectancy has increased over time from 1800 to 2015. The increase is noticeable in all regions. People in Europe and Central Asia region has the longest life span no matter in the sense of average age, 1st quartile value, or 3rd quartile value.  
+
+### Note: Grading Summary  
+
+Bonus- PDF Submission 5 pts  
+Set Up Questions 10 pts  
+Describe Data (observations#, variables#, type of variables, disperse, data wrangling, data processing) 10 pts  
+Exploratory Plots (Histogram, Scatter Plot, Box Plot) 20 pts  
+Cluster Analysis x pts  
+Visualize Cluster x pts  
+Summarize Pattern x pts  
+Print Datatable 1 pt  
+Visualization (legands, title, axis titles, axis values, readable, explanation) 10 pts  
+Report findings 10 pts    
+Use RMarkdown 20 pts   
+PCA Analysis x pts   
+
+### ---End 
